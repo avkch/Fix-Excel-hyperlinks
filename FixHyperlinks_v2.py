@@ -1,13 +1,24 @@
 from openpyxl import load_workbook
 import os
+from tkinter import Tk
+from tkinter.filedialog import askopenfilename
 
 # number of sheets, columns and rows to be examined and fixed (should be set by the user)
 sheets = 1
 columns = 8
 rows = 200
 
-os.chdir("path/") # set the directory of your file as a working directory
-wb = load_workbook("opis.xlsx") # read the xlsx file (should be in the working directory)
+Tk().withdraw()
+
+file = askopenfilename() # show an "Open" dialog box and return the path to the selected file
+
+
+file_directory = os.path.dirname(file) # extract file directory
+file_full_name = os.path.basename(file) # extract file name with extension
+file_name = os.path.splitext(file_full_name)[0] # extract file name without extenion
+file_extension = os.path.splitext(file_full_name)[1] # extract file extension
+
+wb = load_workbook(file) # read the xlsx file (should be in the working directory)
 
 # defining function to loop trough the cells in the sheet and fix the hyperlinks
 def sheetloop(columns, rows):
@@ -32,5 +43,6 @@ for sh in range(0,sheets): # loop through the sheets
     sheet = wb[wsnames[sh]] # make object from the sheet
     sheetloop(columns, rows)
 
-wb.save("file_fixed.xlsx")
+wb.save(file_directory+"/"+file_name+"_fixed"+file_extension)
+
 
